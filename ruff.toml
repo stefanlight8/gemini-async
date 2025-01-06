@@ -1,0 +1,44 @@
+line-length = 120
+target-version = "py310"
+fix = true
+
+[lint]
+preview = true
+extend-select = [
+    "I",    # isort
+    "ANN",  # flake8-annotations
+    "LOG",  # flake8-logging-format
+]
+select = [
+    "B",    # Bugbear rules
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "W",    # pycodestyle warnings
+    "I",    # isort
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
+    "PL",   # pylint rules
+]
+ignore = [
+    "E203",    # Handled by Black
+    "E501",    # Line length handled by Black
+    "PLR0913", # Too many arguments in function definition
+    "PLR0911", # Too many return statements
+]
+exclude = [
+    "build/",
+    "dist/",
+    "docs/",
+    "__pycache__/",
+    "*.egg-info/",
+]
+
+[lint.isort]
+split-on-trailing-comma = false
+
+[format]
+docstring-code-format = true
+docstring-code-line-length = 80
+quote-style = "double"
+line-ending = "lf"
+skip-magic-trailing-comma = true

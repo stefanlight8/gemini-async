@@ -1,0 +1,15 @@
+[MAIN]
+py-version = 3.10
+
+ignore-paths=
+    build/,
+    dist/,
+    docs/,
+    __pycache__/,
+    *.egg-info/,
+
+suggestion-mode=yes
+
+
+[FORMAT]
+max-line-length=120
