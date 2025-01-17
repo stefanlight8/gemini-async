@@ -12,7 +12,7 @@ class Part(Struct):
 
 class Content(Struct):
     parts: Sequence[Part]
-    role: Literal["user", "model"] = "user"
+    role: Literal["user", "model"] | None = None
 
 
 class Candidate(Struct):
