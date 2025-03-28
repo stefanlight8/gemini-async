@@ -1,47 +1,49 @@
-![Banner](static/banner.png)
+# gemini-async
+An asynchronous, static-typed library for interacting with the [Gemini] API, built with aiohttp.
 
-# About
-Gemini-async is an async and static-typed library for working with [Gemini] built for asyncio and Python 3.
+Its primary excellence is the use of msgspec, providing fast serialisation and deserialisation for efficient usage of the API. The library follows a clean and consistent structure, closely aligned with the API's design, while offering simplifications, shortcuts, and enhancements for a smoother developer experience.
+
+# Resources
+- [Examples]
+- Documentation
 
 # Installation
 > [!WARNING]
-> Gemini-async is not available on PyPI yet.
+> gemini-async is not yet available on PyPI. You'll need to install it manually from source.
 ```sh
 > pip install gemini-async
 # or
 > python3 -m pip install gemini-async
 ```
 
-# Basic usage
-```py
-import asyncio
-
-from gemini import Gemini
-from gemini.structs import Content, Part
-
-gemini = Gemini("<your api token>")
-
-async def main() -> None:
-    response = await gemini.generate_content(
-        Content(parts=[Part(text="Hello, Gemini!")])
-    )
-    if not response:
-        print("No response")
-        return
-    print(response.candidates[0].content.parts[0].text)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
 # Issues & Suggestions
 Any feedback is welcome! If you encounter any bugs or have suggestions, feel free to submit them on our [issues page].
 
-Also, you can help with implementation of your idea through pull request, but check [#Contributing] guidelines before.
+You can also help implement your idea by submitting a pull request, but please check the [Contributing] section first.
 
 # Contributing
-Not available yet.
+
+Please familiarize yourself with our [contributing guidelines] before contributing.
+
+We recommend:
+- Since we use [uv](https://astral.sh/uv), we suggest you do as well.
+
+## Getting Started
+
+1. Fork the repository from the `staging` branch.
+2. Clone your fork.
+3. Start coding!
+
+## Working on Changes
+
+- For new features, create a branch named `feature-<name>`, and once complete, open a pull request to the `staging` branch of the main repository.
+- For patches or fixes, follow the same process, but use the `patch-<name>` naming convention.
+
+Happy coding!
+
+* * *
 
 [Gemini]: https://deepmind.google/technologies/gemini/
 [issues page]: https://github.com/stefanlight8/gemini-async/issues
+[contributing guidelines]: ./CONTRIBUTING.md
+[Examples]: ./examples

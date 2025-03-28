@@ -1,6 +1,10 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "gemini"
-version = "0.1.0"
+version = "0.1.1"
 description = "An async and static-typed library for working with Gemini."
 readme = "README.md"
 authors = [
@@ -11,7 +15,3 @@ dependencies = [
     "aiohttp>=3.11.11",
     "msgspec>=0.19.0",
 ]
-
-[build-system]
-requires = ["setuptools>=61"]
-build-backend = "setuptools.build_meta"

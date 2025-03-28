@@ -1,52 +1,79 @@
-from asyncio.events import AbstractEventLoop, get_event_loop
+from __future__ import annotations
+
+from asyncio.events import AbstractEventLoop
 from collections.abc import Sequence
-from typing import Any
+from typing import Any, overload
 
 from aiohttp import ClientResponse
 from aiohttp.client import ClientSession
 from msgspec.json import decode, encode
 
-from gemini.consts import API_VERSION_STRING, MODEL_METHOD_URL, MODEL_STRING
+from gemini.consts import MODEL_METHOD_URL, ApiVersion, Model
 from gemini.enums import ModelMethod
-from gemini.http_client import HTTPClient
-from gemini.structs import Content, GenerateContentResponse, Part
+from gemini.http.client import HTTPClient
+from gemini.structs import Content, Error, GenerateContentResponse, GenerationConfig, Part
+
+__all__: Sequence[str] = ("Client",)
 
 
-class Gemini:
-    __slots__: Sequence[str] = ("__logger", "_key", "_loop", "_http", "version", "model")
+class Client(HTTPClient):
+    __slots__: Sequence[str] = ("_key", "version", "model", "generation_config")
 
     def __init__(
         self,
         key: str,
         *,
-        version: API_VERSION_STRING = "v1",
-        model: MODEL_STRING = "gemini-1.5-pro",
-        loop: AbstractEventLoop | None = None,
+        version: ApiVersion = "v1",
+        model: Model = "gemini-1.5-pro",
         session: ClientSession | None = None,
+        loop: AbstractEventLoop | None = None,
+        generation_config: GenerationConfig | None = None,
     ) -> None:
+        super().__init__(session, loop)
         self._key: str = key
-        self._loop: AbstractEventLoop | None = loop or get_event_loop()
-        self._http: HTTPClient = HTTPClient(self._loop, session=session)
-        self.version: API_VERSION_STRING = version
-        self.model: MODEL_STRING = model
+        self.version: ApiVersion = version
+        self.model: Model = model
+        self.generation_config: GenerationConfig | None = generation_config
+
+    def get_url(self, url: str, version: ApiVersion | None = None, **kwargs: str) -> str:
+        return url.format(key=self._key, version=version or self.version, **kwargs)
+
+    @overload
+    async def generate_content(
+        self,
+        *contents: Content,
+        version: ApiVersion | None = None,
+        model: Model | None = None,
+        system_instruction: str | None = None,
+    ) -> GenerateContentResponse | None: ...
+
+    @overload
+    async def generate_content(
+        self,
+        *,
+        text: str | None = None,
+        version: ApiVersion | None = None,
+        model: Model | None = None,
+        system_instruction: str | None = None,
+    ) -> GenerateContentResponse | None: ...
 
     async def generate_content(
         self,
-        *content: Content,
-        version: API_VERSION_STRING | None = None,
-        model: MODEL_STRING | None = None,
-        system_instruction: str | None = None,  # only text available for system instruction (Google)
-    ) -> GenerateContentResponse | None:
-        body: dict[str, Any] = {"contents": content}
+        *contents: Content,
+        text: str | None = None,
+        version: ApiVersion | None = None,
+        model: Model | None = None,
+        system_instruction: str | None = None,
+    ) -> GenerateContentResponse | Error | None:
+        body: dict[str, Any] = {"contents": list(contents)}
+        if text:
+            body["contents"].append(Content(parts=[Part(text=text)]))
         if system_instruction:
             body["system_instruction"] = Content(parts=[Part(text=system_instruction)])
-        response: ClientResponse | None = await self._http.request(
+        response: ClientResponse | None = await self.request(
             "POST",
-            MODEL_METHOD_URL.format(
-                version=version or self.version,
-                model=model or self.model,
-                method=ModelMethod.GENERATE_CONTENT.value,
-                key=self._key,
+            self.get_url(
+                MODEL_METHOD_URL, version=version, model=model or self.model, method=ModelMethod.GENERATE_CONTENT.value
             ),
             data=encode(body),
         )

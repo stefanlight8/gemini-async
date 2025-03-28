@@ -1,4 +1,9 @@
+from __future__ import annotations
+
+from collections.abc import Sequence
 from enum import Enum
+
+__all__: Sequence[str] = ("FinishReason", "ModelMethod", "Type")
 
 
 class FinishReason(int, Enum):
@@ -17,3 +22,14 @@ class FinishReason(int, Enum):
 
 class ModelMethod(str, Enum):
     GENERATE_CONTENT = "generateContent"
+    STREAM_GENERATE_CONTENT = "streamGenerateContent"
+
+
+class Type(str, Enum):
+    TYPE_UNSPECIFIED = "typeUnspecified"  # TODO: check
+    STRING = "string"
+    NUMBER = "number"
+    INTEGER = "integer"
+    BOOLEAN = "boolean"
+    ARRAY = "array"
+    OBJECT = "object"

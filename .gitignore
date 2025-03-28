@@ -12,3 +12,6 @@ wheels/
 # Package managers files
 *.lock
 .python-version
+
+# System files
+.DS_Store
