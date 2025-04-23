@@ -1,5 +1,5 @@
 # gemini-async
-An asynchronous, static-typed library for interacting with the [Gemini] API, built with aiohttp.
+An asynchronous, static-typed library for interacting with the [Gemini] API, built with httpx.
 
 Its primary excellence is the use of msgspec, providing fast serialisation and deserialisation for efficient usage of the API. The library follows a clean and consistent structure, closely aligned with the API's design, while offering simplifications, shortcuts, and enhancements for a smoother developer experience.
 
