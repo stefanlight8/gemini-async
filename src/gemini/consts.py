@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Final, Literal
 
+from typing_extensions import Any
+
 __version__: Final[str] = "0.1.0"
 __all__: Sequence[str] = (
     "__version__",
@@ -15,6 +17,7 @@ __all__: Sequence[str] = (
 )
 
 USER_AGENT: Final[str] = f"gemini-async/{__version__}"
+HEADERS: Final[dict[str, Any]] = {"User-Agent": USER_AGENT}
 
 API_URL: Final[str] = "https://generativelanguage.googleapis.com/{version}"
 MODELS_URL: Final[str] = API_URL + "/models/"
